@@ -1,0 +1,123 @@
+/*
+    Problema: O todos o ninguno
+    https://omegaup.com/arena/problem/O-todos-o-ninguno/
+
+    ------------------------------------------------------------
+
+    Descripción:
+
+    Se tienen dos conjuntos de números:
+
+        1. N valores (por ejemplo requisitos de juegos)
+        2. M valores (por ejemplo estaturas o capacidades)
+
+    El objetivo es determinar cuántos elementos del primer
+    conjunto pueden ser satisfechos por los valores del segundo
+    conjunto.
+
+    Para que un elemento del primer conjunto pueda ser usado,
+    debe existir un valor del segundo conjunto que sea mayor
+    o igual que él.
+
+    ------------------------------------------------------------
+
+    Idea de la solución:
+
+    Para facilitar la comparación se ordenan ambos arreglos.
+
+    Después se compara cada valor del segundo arreglo con los
+    valores del primero.
+
+    Estrategia:
+
+    1. Ordenar los requisitos (arrN).
+    2. Ordenar las estaturas o capacidades (arrM).
+    3. Recorrer los valores disponibles.
+    4. Contar cuántos requisitos se pueden cumplir.
+
+    Si encontramos un requisito que ya no puede ser cumplido
+    por el valor actual, se detiene el proceso.
+
+    ------------------------------------------------------------
+
+    Complejidad:
+
+        Ordenamiento: O(n log n) + O(m log m)
+
+        Comparación:
+            O(n * m) en el peor caso
+
+    ------------------------------------------------------------
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <algorithm>
+
+int main(){
+
+    int n = 0;   // Cantidad de elementos del primer conjunto
+    int m = 0;   // Cantidad de elementos del segundo conjunto
+    int cont = 0; // Contador de requisitos cumplidos
+
+    // Leer cantidad de elementos del primer conjunto
+    scanf("%d", &n);
+
+    // Leer cantidad de elementos del segundo conjunto
+    scanf("%d", &m);
+
+    int arrN[n], arrM[m];
+
+    // Leer los valores del primer conjunto
+    for(int i = 0; i < n; i++){
+        scanf("%d", &arrN[i]);
+    }
+
+    // Leer los valores del segundo conjunto
+    for(int i = 0; i < m; i++){
+        scanf("%d", &arrM[i]);
+    }
+
+    /*
+        Ordenamos ambos arreglos.
+
+        Esto permite comparar los elementos
+        desde los más pequeños a los más grandes.
+    */
+    std::sort(arrN, arrN + n);
+    std::sort(arrM, arrM + m);
+
+    /*
+        Comparamos los valores disponibles
+        con los requisitos.
+    */
+    for(int i = 0; i < m; i++){
+
+        for(int j = 0; j < n; j++){
+
+            /*
+                Si el requisito es menor o igual
+                al valor disponible, se puede cumplir.
+            */
+            if(arrN[j] <= arrM[i]){
+                cont++;
+            }
+            else{
+                break;
+            }
+        }
+
+        /*
+            Si ya encontramos un requisito que no puede
+            ser satisfecho, terminamos el proceso.
+        */
+        if(arrN[cont] > arrM[i]){
+            break;
+        }
+    }
+
+    // Imprimir cantidad de requisitos cumplidos
+    printf("%d", cont);
+
+    return 0;
+}
