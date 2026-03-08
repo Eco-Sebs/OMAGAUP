@@ -1,0 +1,168 @@
+/*
+    Problema: Sumas (Curso OMI)
+    https://omegaup.com/arena/problem/Sumas-Curso-OMI/
+
+    Descripción:
+    Dado un número N y un entero K, se debe calcular cuántas formas existen
+    de expresar N como la suma de exactamente K números elevados al cuadrado.
+
+    Ejemplo de cuadrados válidos:
+    1^2, 2^2, 3^2, 4^2, ...
+
+    Los números pueden repetirse.
+
+    ------------------------------------------------------------
+
+    Idea de la solución (Programación Dinámica):
+
+    Se utiliza una tabla dp donde:
+
+        dp[s][c]
+
+    representa el número de formas de obtener la suma s
+    utilizando exactamente c números elevados al cuadrado.
+
+    Caso base:
+
+        dp[0][0] = 1
+
+    Existe exactamente una forma de obtener suma 0 usando
+    0 números: no elegir ninguno.
+
+    ------------------------------------------------------------
+
+    Transición:
+
+    Para cada número que pueda elevarse al cuadrado:
+
+        num = 1 ... sqrt(N)
+
+    calculamos:
+
+        cuadrado = num * num
+
+    y actualizamos:
+
+        dp[s][c] += dp[s - cuadrado][c - 1]
+
+    Esto significa que si antes podíamos formar:
+
+        (s - cuadrado)
+
+    usando:
+
+        (c - 1) números,
+
+    entonces podemos formar:
+
+        s
+
+    usando:
+
+        c números agregando este nuevo cuadrado.
+
+    ------------------------------------------------------------
+
+    Complejidad:
+
+        O(sqrt(N) * N * K)
+
+    ------------------------------------------------------------
+
+    Resultado final:
+
+        dp[N][K]
+
+    que representa el número de formas de obtener N
+    usando exactamente K cuadrados.
+*/
+
+#include <stdio.h>
+#include <math.h>
+
+int main(){
+
+    int n = 0, k = 0;
+
+    // Leer el número objetivo N y la cantidad de cuadrados K
+    scanf("%d %d", &n, &k);
+
+    // El número máximo que podemos elevar al cuadrado
+    // (no tiene sentido usar números mayores porque su cuadrado superaría N)
+    int aux = sqrt(n);
+
+    /*
+        dp[s][c] significa:
+
+        Número de formas de obtener suma = s
+        usando exactamente c números elevados al cuadrado
+    */
+    long long dp[n + 1][k + 1];
+
+    // Inicializamos toda la tabla en 0
+    for(int i = 0; i <= n; i++){
+        for(int j = 0; j <= k; j++){
+            dp[i][j] = 0;
+        }
+    }
+
+    /*
+        Caso base:
+
+        Hay exactamente 1 forma de hacer suma 0 usando 0 números:
+        no elegir nada.
+    */
+    dp[0][0] = 1;
+
+    /*
+        Recorremos cada número posible que puede elevarse al cuadrado:
+
+        1, 2, 3, ..., sqrt(N)
+    */
+    for(int num = 1; num <= aux; num++){
+
+        // Calculamos el cuadrado del número actual
+        int cuadrado = num * num;
+
+        /*
+            Recorremos todas las sumas posibles desde el valor del cuadrado
+            hasta N.
+        */
+        for(int s = cuadrado; s <= n; s++){
+
+            /*
+                Recorremos la cantidad de números usados
+                desde 1 hasta K
+            */
+            for(int c = 1; c <= k; c++){
+
+                /*
+                    Si antes podíamos formar:
+
+                        (s - cuadrado)
+
+                    usando
+
+                        (c - 1) números,
+
+                    entonces ahora podemos formar:
+
+                        s
+
+                    usando
+
+                        c números
+
+                    agregando este cuadrado.
+                */
+                dp[s][c] += dp[s - cuadrado][c - 1];
+            }
+        }
+    }
+
+    // Resultado final:
+    // Número de formas de obtener N usando exactamente K cuadrados
+    printf("%lld\n", dp[n][k]);
+
+    return 0;
+}
