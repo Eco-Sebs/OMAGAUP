@@ -1,0 +1,137 @@
+/*
+    Problema: ATSA Copa Fut
+    https://omegaup.com/arena/problem/atsa-copa-fut/
+
+    ------------------------------------------------------------
+
+    Descripción:
+
+    Se recibe un conjunto de N números. El objetivo es calcular
+    la suma del producto de todos los pares posibles (i, j)
+    donde i < j.
+
+    Es decir, si tenemos:
+
+        P = [p1, p2, p3, ..., pn]
+
+    debemos calcular:
+
+        p1*p2 + p1*p3 + ... + p1*pn +
+        p2*p3 + p2*p4 + ... + p2*pn +
+        ...
+        p(n-1)*pn
+
+    ------------------------------------------------------------
+
+    Ejemplo:
+
+        Entrada:
+            3 28 1 4 3
+
+        Pares posibles y sus productos:
+
+        (3, 28) = 84
+        (3, 1)  = 3
+        (3, 4)  = 12
+        (3, 3)  = 9
+        (28, 1) = 28
+        (28, 4) = 112
+        (28, 3) = 84
+        (1, 4)  = 4
+        (1, 3)  = 3
+        (4, 3)  = 12
+
+        Resultado total:
+            351
+
+    ------------------------------------------------------------
+
+    Solución directa (no óptima):
+
+    Usar dos ciclos anidados para calcular todos los pares.
+
+        for(i)
+            for(j=i+1)
+
+    Complejidad:
+
+        O(n²)
+
+    ------------------------------------------------------------
+
+    Optimización utilizada:
+
+    En lugar de calcular cada par explícitamente,
+    usamos una suma acumulada.
+
+    Idea:
+
+    Cuando procesamos el elemento actual Pi,
+    lo multiplicamos por la suma de todos
+    los elementos anteriores.
+
+        Pi * (p1 + p2 + ... + p(i-1))
+
+    Esto permite sumar todos los productos
+    correspondientes en un solo paso.
+
+    Tabla ejemplo:
+
+    | Paso | Pi | suma_antes | Pi × suma_antes | total |
+    |----|----|-------------|----------------|------|
+    |1|3|0|0|0|
+    |2|28|3|84|84|
+    |3|1|31|31|115|
+    |4|4|32|128|243|
+    |5|3|36|108|351|
+
+    ------------------------------------------------------------
+
+    Complejidad:
+
+        Tiempo:  O(n)
+        Memoria: O(n)
+
+    Esto mejora significativamente respecto a O(n²).
+
+    ------------------------------------------------------------
+*/
+
+#include <stdio.h>
+
+int main(){
+
+    long long n = 0;          // Cantidad de números
+    long long g = 0;          // Resultado final (suma de productos)
+    long long acumulado = 0;  // Suma acumulada de elementos anteriores
+
+    // Leer n
+    scanf("%lld", &n);
+
+    long long aux[n];
+
+    // Leer los valores
+    for(int i = 0; i < n; i++){
+        scanf("%lld", &aux[i]);
+    }
+
+    /*
+        Recorremos el arreglo.
+
+        Para cada elemento:
+            producto = elemento_actual * suma_de_anteriores
+    */
+    for(int i = 0; i < n; i++){
+
+        // Sumamos los productos con los valores anteriores
+        g = (aux[i] * acumulado) + g;
+
+        // Actualizamos la suma acumulada
+        acumulado = aux[i] + acumulado;
+    }
+
+    // Imprimir resultado final
+    printf("%lld", g);
+
+    return 0;
+}
