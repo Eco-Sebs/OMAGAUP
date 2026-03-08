@@ -1,0 +1,102 @@
+/*
+    Problema: Tarea 3 - Curso Robot C ULAM
+    https://omegaup.com/arena/problem/Tarea-3-Curso-Robot-C-ULAM/
+
+    ------------------------------------------------------------
+
+    Descripción:
+
+    El problema consiste en generar la serie de Ulam,
+    también conocida como la secuencia de Collatz.
+
+    A partir de un número entero positivo N,
+    se aplican las siguientes reglas hasta llegar a 1:
+
+        1. Si N es par → se divide entre 2
+                N = N / 2
+
+        2. Si N es impar → se multiplica por 3 y se suma 1
+                N = 3*N + 1
+
+    El proceso continúa hasta que el valor llegue a 1.
+
+    Durante el proceso se deben imprimir todos los valores
+    generados en la secuencia.
+
+    ------------------------------------------------------------
+
+    Ejemplo:
+
+    Entrada:
+        6
+
+    Proceso:
+        6 → 3 → 10 → 5 → 16 → 8 → 4 → 2 → 1
+
+    Salida:
+        6 3 10 5 16 8 4 2 1
+
+    ------------------------------------------------------------
+
+    Idea de la solución:
+
+    1. Leer el número inicial N.
+    2. Imprimir el primer valor.
+    3. Mientras N sea diferente de 1:
+        - Si es par, dividir entre 2.
+        - Si es impar, aplicar 3*N + 1.
+        - Imprimir el nuevo valor.
+    4. El ciclo termina cuando se alcanza 1.
+
+    ------------------------------------------------------------
+
+    Complejidad:
+
+        O(k)
+
+    donde k es la cantidad de términos generados
+    en la secuencia hasta llegar a 1.
+
+    ------------------------------------------------------------
+*/
+
+#include <stdio.h>
+
+int main(){
+
+    int n = 0;
+
+    // Leer el número inicial
+    scanf("%d", &n);
+
+    // Imprimir el primer valor de la secuencia
+    printf("%d ", n);
+
+    /*
+        Continuamos generando la secuencia
+        mientras n sea diferente de 1
+    */
+    while(n != 1){
+
+        /*
+            Si el número es par
+            se divide entre 2
+        */
+        if(n % 2 == 0){
+            n = n / 2;
+        }
+
+        /*
+            Si el número es impar
+            se aplica la regla 3n + 1
+        */
+        else{
+            n = (n * 3) + 1;
+        }
+
+        // Imprimir el nuevo valor de la secuencia
+        printf("%d ", n);
+    }
+
+    return 0;
+}
