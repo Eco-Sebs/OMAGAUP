@@ -1,0 +1,55 @@
+/******************************************************************************
+
+Problema: 5601. Mi Cumpleaños
+Plataforma: omegaUp
+Enlace: https://omegaup.com/arena/problem/Mi-Cumpleanos/#problems
+
+Descripción resumida:
+Hay una mesa con N lugares. Cada número de entrada indica cuántos vasos
+hay en ese lugar:
+0  -> falta un vaso
+1  -> correcto
+>1 -> hay vasos de más
+
+Cada lugar debería tener exactamente 1 vaso.
+
+Se debe calcular:
+vasos_reales - vasos_esperados
+
+Si el resultado es:
+negativo -> faltan vasos
+0 -> todo correcto
+positivo -> sobran vasos
+
+*******************************************************************************/
+
+#include <stdio.h>
+#include <stdbool.h>
+
+int main()
+{
+    
+    int n = 0;      // variable para leer cada número de la entrada
+    int aux = 0;    // acumulador de vasos reales en la mesa
+    int con = 0;    // contador de lugares en la mesa
+    unsigned junta = 0; // resultado final (sobran o faltan vasos)
+    
+    // scanf devuelve 1 si pudo leer un entero
+    // el ciclo continúa mientras haya números en la entrada
+    while(scanf("%d", &n) == 1){
+        
+        aux = aux + n;  // suma los vasos que realmente hay
+        
+        con++;          // cuenta cuántos lugares hay en la mesa
+        
+    }
+
+    // vasos_reales - vasos_esperados
+    // vasos_esperados = con (1 vaso por lugar)
+    junta = aux - con;
+
+    // imprime el resultado
+    printf("%d", junta);
+    
+    return 0;
+}
