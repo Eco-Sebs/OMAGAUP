@@ -1,0 +1,92 @@
+/******************************************************************************
+Problema: 6962. Limitando Aplicaciones
+Plataforma: omegaUp
+Enlace: https://omegaup.com/arena/problem/Limitando-Aplicaciones/#problems
+
+Descripción general:
+El programa recibe N casos. En cada caso se leen M aplicaciones (cadenas).
+De cada conjunto se debe elegir una aplicación que NO haya sido elegida en
+casos anteriores. El resultado final es un vector con N aplicaciones únicas
+(en el orden en que se fueron seleccionando).
+
+Estrategia:
+1. Leer N (número de conjuntos de aplicaciones).
+2. Para cada conjunto:
+   - Leer M aplicaciones.
+   - Revisar cada aplicación del conjunto.
+   - Si la aplicación no ha sido usada antes, guardarla en el vector resultado.
+3. Al final imprimir las aplicaciones elegidas.
+
+Complejidad temporal (Big-O):
+- El ciclo principal recorre N casos.
+- Dentro se leen M palabras → O(M).
+- Luego se compara cada palabra con las ya guardadas (hasta i elementos).
+
+En el peor caso:
+    O(N * M * N)
+
+porque para cada palabra se revisa contra los elementos ya guardados.
+
+Complejidad espacial:
+- Se almacenan N resultados → O(N)
+- Se almacena temporalmente M palabras → O(M)
+
+******************************************************************************/
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+int main(){
+    
+    int n = 0; // número de casos
+    int m = 0;
+    int rom = 0; // bandera para saber si la palabra ya existe
+
+    cin >> n; // leer número de conjuntos
+
+    vector<string> res(n); // vector donde se guardarán las aplicaciones elegidas
+
+    // recorrer cada conjunto de aplicaciones
+    for(int i = 0; i < n; i++){
+
+        cin >> m; // número de aplicaciones en este conjunto
+        vector<string> aux(m); // vector temporal para guardar las aplicaciones leídas
+
+        // leer todas las aplicaciones del conjunto
+        for(int j = 0; j < m; j++){
+            cin >> aux[j]; // leer nombre de la aplicación
+        }
+
+        // buscar una aplicación que no haya sido usada antes
+        for(int j = 0; j < m; j++){
+
+            rom = 0; // reiniciar bandera
+
+            // verificar si la aplicación ya fue usada en resultados previos
+            for(int z = 0; z < i; z++){ // solo revisar posiciones ya llenas
+                
+                if(aux[j] == res[z]){ // si coincide con alguna ya usada
+                    rom = 1; // marcar que ya existe
+                    break;   // salir del ciclo de comparación
+                }
+
+            }
+
+            // si no se encontró repetida
+            if(rom == 0){
+                res[i] = aux[j]; // guardar aplicación como resultado
+                break; // salir del for de j (ya encontramos una válida)
+            }
+        }
+    }
+
+    // imprimir las aplicaciones seleccionadas
+    for(int i = 0; i < n; i++){
+        cout << res[i] << " ";
+    }
+
+    return 0;
+}
