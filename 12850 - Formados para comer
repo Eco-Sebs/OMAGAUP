@@ -1,0 +1,73 @@
+/**
+ * PROBLEMA: 12850 - Formados para comer
+ * PLATAFORMA: OmegaUp
+ * URL: https://omegaup.com/arena/problem/Formados-para-correr/
+ * 
+ * DESCRIPCIÓN:
+ * Simulación de una fila de estudiantes que pueden pedir tacos o refrescos.
+ * Los estudiantes llegan y se forman en una fila de tacos.
+ * Cuando atienden a un estudiante:
+ *   - Si pide TACO: pasa de la fila de tacos a la fila de refrescos
+ *   - Si pede REFRESCO: se elimina de la fila de refrescos
+ * 
+ * COMPLEJIDAD: O(n) temporal, O(n) espacial
+ * 
+ */
+
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+int main(){
+    // Colas para simular las dos filas del proceso
+    queue<string> Taco;      // Fila de espera para tacos
+    queue<string> Refresco;  // Fila de espera para refrescos
+
+    int n;  // Número de operaciones a procesar
+    cin >> n;
+
+    string proc;  // Variable para almacenar la operación actual
+    string paso;  // Variable para el nombre del estudiante
+
+    // Procesamiento de las n operaciones
+    for(int i = 0; i < n; i++){
+        cin >> proc;  // Leer la operación (LLEGA o ATIENDE)
+
+        if(proc == "LLEGA"){
+            // CASO 1: Un nuevo estudiante llega para pedir tacos
+            cin >> proc;           // Leer el nombre del estudiante
+            Taco.push(proc);       // Se forma en la fila de tacos
+
+        } else if(proc == "ATIENDE"){
+            // CASO 2: Se atiende a un estudiante
+            cin >> proc;           // Leer qué atienden (TACO o REFRESCO)
+
+            if(proc == "TACO"){
+                // Atienden a un estudiante para darle taco
+                paso = Taco.front();   // Obtener el primer estudiante
+                Taco.pop();             // Sacarlo de la fila de tacos
+                Refresco.push(paso);    // Pasa a la fila de refrescos
+
+            } else if(proc == "REFRESCO"){
+                // Atienden a un estudiante para darle refresco
+                Refresco.pop();         // Sale de la fila de refrescos
+            }
+        }
+    }
+
+    // Mostrar los estudiantes que quedaron en la fila de tacos
+    while(!Taco.empty()){
+        cout << Taco.front() << " ";
+        Taco.pop();
+    }
+    cout << endl;
+
+    // Mostrar los estudiantes que quedaron en la fila de refrescos
+    while(!Refresco.empty()){
+        cout << Refresco.front() << " ";
+        Refresco.pop();
+    }
+
+    return 0;
+}
