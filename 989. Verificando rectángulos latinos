@@ -1,0 +1,134 @@
+/*
+ * Problema: 989. Verificando rectángulos latinos - OmegaUp
+ * Descripción: Verifica si una matriz es un rectángulo latino.
+ *              Un número es válido si está en el rango [1, R+C].
+ *              Cada renglón y cada columna debe tener todos sus números distintos.
+ *
+ * Funcionamiento:
+ *   1. Lee las dimensiones R y C, y la matriz de enteros.
+ *   2. Calcula el rango máximo permitido: rango_max = R + C.
+ *   3. Verifica cada RENGLÓN (almacena resultado en arreglo R[]):
+ *      a. Asume que el renglón es válido (rec = 1).
+ *      b. Revisa que TODOS los números estén en el rango [1, rango_max].
+ *         Si alguno no lo está, marca rec = 0 (inválido) y deja de revisar.
+ *      c. Si pasó la prueba de rango (rec == 1), revisa si hay números REPETIDOS.
+ *         Compara cada elemento con los que le siguen (para no compararse consigo mismo).
+ *         Si encuentra un repetido, marca rec = 0.
+ *      d. Guarda el resultado final (rec) en R[i].
+ *   4. Verifica cada COLUMNA (almacena resultado en arreglo C[]) de forma análoga.
+ *      La diferencia es cómo se indexa la matriz: para la columna 'i', se fija la columna
+ *      y se varían los renglones (aux[j][i]).
+ *   5. Imprime primero los resultados de los renglones y luego los de las columnas.
+ */
+
+#include <stdio.h>
+
+int main() {
+    int r = 0, c = 0; // r = renglones, c = columnas
+
+    // --- 1. Lectura de dimensiones ---
+    scanf("%d %d", &r, &c);
+
+    // --- 2. Rango máximo permitido ---
+    int rango_max = r + c;
+
+    // --- 3. Declaración de matrices y arreglos de resultados ---
+    int aux[r][c];   // Matriz principal que se va a verificar
+    int R[r];        // Arreglo para resultados de los renglones (1 = bien, 0 = mal)
+    int C[c];        // Arreglo para resultados de las columnas (1 = bien, 0 = mal)
+
+    // --- 4. Lectura de la matriz ---
+    for (int i = 0; i < r; i++) { // Recorre cada renglón
+        for (int j = 0; j < c; j++) { // Recorre cada columna del renglón actual
+            scanf("%d", &aux[i][j]);
+        }
+    }
+
+    // ============================================================
+    // == 5. VERIFICACIÓN DE LOS RENGLONES ========================
+    // ============================================================
+    int rec = 0; // Variable temporal para el estado del renglón actual (1 bien, 0 mal)
+
+    for (int i = 0; i < r; i++) { // Itera sobre cada renglón (índice i)
+        rec = 1; // Inicialmente asumimos que el renglón i es válido
+
+        // --- 5a. Verificación de RANGO en el renglón i ---
+        for (int j = 0; j < c; j++) {
+            if (aux[i][j] > rango_max) { // ¿El número es mayor al máximo permitido?
+                rec = 0; // El renglón es inválido
+                break;    // Sale del bucle, ya no necesita revisar más números de este renglón
+            }
+        }
+
+        // --- 5b. Verificación de REPETIDOS en el renglón i (solo si pasó el rango) ---
+        if (rec == 1) { // Solo si el rango fue correcto
+            for (int j = 0; j < c; j++) { // Toma un elemento como referencia (índice j)
+                // Compara el elemento en la posición j con los que le siguen (z = j+1 hasta el final)
+                // Esto evita comparar un elemento consigo mismo y hacer comparaciones duplicadas.
+                for (int z = j + 1; z < c; z++) {
+                    if (aux[i][j] == aux[i][z]) { // ¿Son iguales?
+                        rec = 0; // El renglón es inválido por tener repetidos
+                        break;    // Sale del bucle interno de comparaciones
+                    }
+                }
+                if (rec == 0) break; // Si ya se marcó como inválido, sale del bucle de referencia
+            }
+        }
+
+        // --- 5c. Almacenar el resultado del renglón i ---
+        R[i] = rec;
+    }
+
+    // ============================================================
+    // == 6. VERIFICACIÓN DE LAS COLUMNAS =========================
+    // ============================================================
+    // Reiniciamos 'rec' para usarla de nuevo (no es necesario, pero es claro)
+    rec = 0;
+
+    for (int i = 0; i < c; i++) { // Itera sobre cada columna (índice i)
+        rec = 1; // Inicialmente asumimos que la columna i es válida
+
+        // --- 6a. Verificación de RANGO en la columna i ---
+        // Nota: para recorrer una columna fija 'i', variamos el renglón 'j'.
+        for (int j = 0; j < r; j++) {
+            if (aux[j][i] > rango_max) { // ¿El número es mayor al máximo permitido?
+                rec = 0; // La columna es inválida
+                break;    // Sale del bucle
+            }
+        }
+
+        // --- 6b. Verificación de REPETIDOS en la columna i (solo si pasó el rango) ---
+        if (rec == 1) { // Solo si el rango fue correcto
+            for (int j = 0; j < r; j++) { // Toma un elemento como referencia en el renglón j, columna i
+                // Compara con los elementos en los renglones siguientes (z = j+1) de la MISMA columna i
+                for (int z = j + 1; z < r; z++) {
+                    if (aux[j][i] == aux[z][i]) { // ¿Son iguales?
+                        rec = 0; // La columna es inválida por tener repetidos
+                        break;    // Sale del bucle interno
+                    }
+                }
+                if (rec == 0) break; // Si ya se marcó como inválido, sale del bucle de referencia
+            }
+        }
+
+        // --- 6c. Almacenar el resultado de la columna i ---
+        C[i] = rec;
+    }
+
+    // ============================================================
+    // == 7. IMPRESIÓN DE RESULTADOS ==============================
+    // ============================================================
+
+    // --- 7a. Imprimir resultados de los RENGLONES ---
+    for (int j = 0; j < r; j++) {
+        printf("%d ", R[j]);
+    }
+    printf("\n"); // Salto de línea después de los renglones
+
+    // --- 7b. Imprimir resultados de las COLUMNAS ---
+    for (int j = 0; j < c; j++) {
+        printf("%d ", C[j]);
+    }
+
+    return 0; // Indica que el programa terminó correctamente
+}
